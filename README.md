@@ -1,4 +1,4 @@
-## Express Async Handler
+## Express Handler Async
 
 **Overview**
 - Middleware designed to manage exceptions within asynchronous Express routes, forwarding them to your Express error handlers.
@@ -15,7 +15,9 @@
 - Open-source.
 
 **Installation**
-- npm install express-handler-async
+```bash
+npm install express-handler-async
+```
 
 **Usage**
 - Import the asyncHandler function from the express-handler-async package.
