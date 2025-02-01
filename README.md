@@ -1,76 +1,46 @@
-## HTML Template based Email
+## Express Async Handler
 
 **Overview**
-- Template Email is a Node.js package designed to simplify sending emails with HTML templates. It provides a convenient way to dynamically fill in template placeholders with specific data and send emails using the Nodemailer library.
+- Middleware designed to manage exceptions within asynchronous Express routes, forwarding them to your Express error handlers.
 
 **Features**
-- Send emails with custom HTML templates.
-- Replace placeholders in templates with dynamic data.
-- Support for Gmail as the email service provider.
-- Error handling for template loading and email sending..
+- Automatically catches exceptions thrown by asynchronous Express routes.
+- Forwards exceptions to your Express error handlers.
+- Supports both synchronous and asynchronous error handlers.
+- Supports both Express 4.x and 5.x.
+- Lightweight and easy to use.
+- No dependencies.
+- Written in TypeScript.
+- Fully typed.
+- Open-source.
 
 **Installation**
-- npm install template-email
+- npm install express-handler-async
 
 **Usage**
-- Import the EmailService class from the package.
-- Initialize an instance of EmailService with your Gmail credentials and the directory path to your email templates.
-- Use the sendMail method to send emails, providing necessary parameters such as recipient, subject, and template reference.
+- Import the asyncHandler function from the express-handler-async package.
+- Wrap your asynchronous Express route handlers with the asyncHandler function.
+- The asyncHandler function will automatically catch exceptions thrown by your asynchronous route handlers and forward them to your Express error handlers.
 
 
 ```javascript
-const { EmailService } = require('template-email');
+import asyncHandler from 'express-handler-async';
 
-// Initialize EmailService
-const emailService = new EmailService({
-    emailUser: 'your.email@gmail.com',
-    emailPassword: 'yourpassword',
-    emailTemplatesDirectory: './utils/email-templates' // Path to email templates
-});
+// express route example
+app.get('/example', asyncHandler(async (req, res) => {
+    const result = await someAsyncFunction();
+    res.json(result);
+}));
+```
 
-// Send email without HTML template
-emailService.sendMail({
-    to: 'recipient@example.com',
-    subject: 'Test Email',
-    html: '<p>This is a test email.</p>'
-});
-
-// Send email with HTML template
-emailService.sendMail({
-    to: 'recipient@example.com',
-    subject: 'Test Email',
-    templateRef: 'login',   // Reference to HTML template file
-    data: {
-        email: 'test123@gmail.com',
-        password: '123456',
-        frontendUrl: 'http://example.com'
+```javascript
+// without asyncHandler
+app.get('/example', async (req, res, next) => {
+    try {
+        const result = await someAsyncFunction();
+        res.json(result);
+    } catch (error) {
+        next(error);
     }
 });
-
-
-
-// html code
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Credentials</title>
-</head>
-
-<body>
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2>User Login Credentials - ABC System</h2>
-        <p>Dear User,</p>
-        <p>Your login credentials for ABC System are as follows:</p>
-        <h1 style="color: #3498db; font-size: 1em;">email: {{email}}</h1>
-        <h1 style="color: #3498db; font-size: 1em;">password: {{password}}</h1>
-
-        <p>Use the above credentials to login at <a href="{{frontendUrl}}">ABC System</a></p>
-        <p>Thank you for using our service!</p>
-    </div>
-</body>
-
-</html>
+```
