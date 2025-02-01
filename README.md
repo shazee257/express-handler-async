@@ -14,6 +14,7 @@
 - Fully typed.
 - Open-source.
 
+
 **Installation**
 ```bash
 npm install express-handler-async
